@@ -40,6 +40,12 @@ class HandleInertiaRequests extends Middleware
             'name' => config('app.name'),
             'auth' => [
                 'user' => $request->user(),
+                'organization' => $request->user()?->currentOrganization,
+                'role' => $request->user()?->organizations()
+                    ->wherePivot('organization_id', $request->user()?->current_organization_id)
+                    ->first()
+                    ?->pivot
+                    ?->role,
             ],
         ];
     }
