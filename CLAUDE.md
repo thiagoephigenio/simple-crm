@@ -32,6 +32,31 @@ composer run test                              # Full suite: config clear + pint
 php artisan wayfinder:generate   # Regenerate TypeScript route/action functions
 ```
 
+## Forms
+
+**Never use `useForm` from `@inertiajs/react` for new forms.** Always use the hybrid pattern:
+
+- **react-hook-form** + **zod** for form state and client-side validation
+- **shadcn `Form` components** (`Form`, `FormField`, `FormItem`, `FormLabel`, `FormControl`, `FormMessage`) for UI
+- **`router.post/put/patch/delete`** from Inertia for the actual HTTP submission
+- Map server-side errors back with `form.setError()` inside `onError`
+
+```tsx
+const form = useForm<z.infer<typeof schema>>({ resolver: zodResolver(schema) });
+
+function onSubmit(values: z.infer<typeof schema>) {
+    router.post('/route', values, {
+        onError: (errors) => {
+            Object.entries(errors).forEach(([field, message]) =>
+                form.setError(field as any, { message }),
+            );
+        },
+    });
+}
+```
+
+**Why:** `useForm` from Inertia uses controlled inputs (re-render on every keystroke). react-hook-form uses uncontrolled inputs for better performance, and zod prevents unnecessary round-trips for obvious validation errors.
+
 ## Architecture
 
 This is a **Laravel 13 + React 19 + Inertia.js v3** SPA. There are no API routes — all routing goes through Inertia server-side rendering with `Inertia::render()`.
