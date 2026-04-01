@@ -1,11 +1,11 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "laravel/blank-react-starter-kit",
+    "name": "simple-crm/app",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
+    "description": "Simple CRM application.",
     "keywords": [
         "laravel",
-        "framework"
+        "crm"
     ],
     "license": "MIT",
     "require": {
